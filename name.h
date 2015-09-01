@@ -1,0 +1,9 @@
+
+
+#define PULSE_TIME 1
+#define PERIOD_TIME 40
+#define CONTROL_PHASE_TIME 5000
+#define MAX_POWER_TIC 40
+#define STEP_QEI 10
+#define ADC_MIN 150
+#define ADC_MAX 0x3FF
