@@ -14,29 +14,29 @@
       <file>$PROJ_DIR$\spi.c</file>
       <file>$PROJ_DIR$\timer.c</file>
       <file>$PROJ_DIR$\uart.c</file>
-      <file>$PROJ_DIR$\Debug\Obj\timer.pbi</file>
       <file>$PROJ_DIR$\Debug\Obj\spi.pbi</file>
-      <file>$TOOLKIT_DIR$\src\template\cfgm16.xcl</file>
-      <file>$PROJ_DIR$\Debug\Obj\Dimmer.pbd</file>
-      <file>$PROJ_DIR$\Debug\Obj\cooking.r90</file>
-      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\timer.pbi</file>
       <file>$PROJ_DIR$\uart.h</file>
       <file>$PROJ_DIR$\Debug\Obj\timer.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\cooking.r90</file>
+      <file>$PROJ_DIR$\Debug\Obj\Dimmer.pbd</file>
+      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
+      <file>$TOOLKIT_DIR$\src\template\cfgm16.xcl</file>
       <file>$TOOLKIT_DIR$\inc\iom16.h</file>
       <file>$TOOLKIT_DIR$\inc\clib\string.h</file>
       <file>$TOOLKIT_DIR$\inc\clib\sysmac.h</file>
       <file>$TOOLKIT_DIR$\src\template\cfg3soim.xcl</file>
       <file>$TOOLKIT_DIR$\inc\clib\stdio.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\main.r90</file>
       <file>$PROJ_DIR$\Debug\Obj\cooking.pbi</file>
+      <file>$PROJ_DIR$\cooking.h</file>
+      <file>$PROJ_DIR$\Debug\Obj\uart.pbi</file>
       <file>$PROJ_DIR$\Debug\Obj\spi.r90</file>
       <file>$PROJ_DIR$\Debug\Obj\RFM70_init.pbi</file>
       <file>$PROJ_DIR$\protocol.h</file>
       <file>$TOOLKIT_DIR$\inc\bitdefinitions\iom16.inc</file>
       <file>$PROJ_DIR$\adc.h</file>
       <file>$TOOLKIT_DIR$\inc\clib\stdarg.h</file>
-      <file>$PROJ_DIR$\Debug\Obj\uart.pbi</file>
-      <file>$PROJ_DIR$\Debug\Obj\main.r90</file>
-      <file>$PROJ_DIR$\cooking.h</file>
       <file>$PROJ_DIR$\Debug\Obj\protocol.r90</file>
       <file>$PROJ_DIR$\Debug\Obj\uart.r90</file>
       <file>$PROJ_DIR$\RFM70.h</file>
@@ -67,11 +67,11 @@
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 26 16 13 25 34 41</file>
+          <file> 29 16 14 28 34 41</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 26 16 13 25 34 41</file>
+          <file> 29 16 14 28 34 41</file>
         </tool>
       </inputs>
     </file>
@@ -84,17 +84,17 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 21</file>
+          <file> 22</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 16 13 25 34 41 30 44 26</file>
+          <file> 16 14 28 34 41 23 44 29</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 16 13 25 34 41 30 44 26</file>
+          <file> 16 14 28 34 41 23 44 29</file>
         </tool>
       </inputs>
     </file>
@@ -103,7 +103,7 @@
       <outputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 29</file>
+          <file> 21</file>
         </tool>
         <tool>
           <name>BICOMP</name>
@@ -113,11 +113,11 @@
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 16 13 25 34 41 40 14 26 24 36 44 30 17 18 20 27</file>
+          <file> 16 14 28 34 41 40 10 29 27 36 44 23 17 18 20 30</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 16 13 25 34 41 40 14 26 24 36 44 30 17 18 20 27</file>
+          <file> 16 14 28 34 41 40 10 29 27 36 44 23 17 18 20 30</file>
         </tool>
       </inputs>
     </file>
@@ -136,11 +136,11 @@
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 24 16 13 25 14 34 41 17 18 20 27 40 26 30 44</file>
+          <file> 27 16 14 28 10 34 41 17 18 20 30 40 29 23 44</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 24 16 13 25 14 34 41 17 18 20 27 40 26 30 44</file>
+          <file> 27 16 14 28 10 34 41 17 18 20 30 40 29 23 44</file>
         </tool>
       </inputs>
     </file>
@@ -149,17 +149,17 @@
       <outputs>
         <tool>
           <name>BICOMP</name>
-          <file> 23</file>
+          <file> 26</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 33 20 27 18 17</file>
+          <file> 33 20 30 18 17</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 33 20 27 18 17</file>
+          <file> 33 20 30 18 17</file>
         </tool>
       </inputs>
     </file>
@@ -168,30 +168,7 @@
       <outputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 22</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 9</file>
-        </tool>
-      </outputs>
-      <inputs>
-        <tool>
-          <name>ICCAVR</name>
-          <file> 16 13 25 34 41 36</file>
-        </tool>
-        <tool>
-          <name>BICOMP</name>
-          <file> 16 13 25 34 41 36</file>
-        </tool>
-      </inputs>
-    </file>
-    <file>
-      <name>$PROJ_DIR$\timer.c</name>
-      <outputs>
-        <tool>
-          <name>ICCAVR</name>
-          <file> 15</file>
+          <file> 25</file>
         </tool>
         <tool>
           <name>BICOMP</name>
@@ -201,11 +178,34 @@
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 16 13 25 34 41 44 40</file>
+          <file> 16 14 28 34 41 36</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 16 13 25 34 41 44 40</file>
+          <file> 16 14 28 34 41 36</file>
+        </tool>
+      </inputs>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\timer.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 11</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 9</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 16 14 28 34 41 44 40</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 16 14 28 34 41 44 40</file>
         </tool>
       </inputs>
     </file>
@@ -218,17 +218,17 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 28</file>
+          <file> 24</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 14 16 13 25 34 41 24</file>
+          <file> 10 16 14 28 34 41 27</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 14 16 13 25 34 41 24</file>
+          <file> 10 16 14 28 34 41 27</file>
         </tool>
       </inputs>
     </file>
@@ -237,7 +237,7 @@
       <inputs>
         <tool>
           <name>BILINK</name>
-          <file> 39 21 43 38 9 8 28</file>
+          <file> 39 22 43 38 8 9 24</file>
         </tool>
       </inputs>
     </file>
@@ -255,7 +255,7 @@
       <inputs>
         <tool>
           <name>XLINK</name>
-          <file> 10 19 35 12 29 31 22 15 32 37</file>
+          <file> 15 19 35 12 21 31 25 11 32 37</file>
         </tool>
       </inputs>
     </file>
@@ -276,19 +276,19 @@
       <file>$PROJ_DIR$\spi.c</file>
       <file>$PROJ_DIR$\timer.c</file>
       <file>$PROJ_DIR$\uart.c</file>
-      <file>$TOOLKIT_DIR$\src\template\cfgm16.xcl</file>
-      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
       <file>$PROJ_DIR$\uart.h</file>
+      <file>$TOOLKIT_DIR$\inc\iomacro.h</file>
+      <file>$TOOLKIT_DIR$\src\template\cfgm16.xcl</file>
       <file>$TOOLKIT_DIR$\inc\iom16.h</file>
       <file>$TOOLKIT_DIR$\inc\clib\string.h</file>
       <file>$TOOLKIT_DIR$\inc\clib\sysmac.h</file>
       <file>$TOOLKIT_DIR$\src\template\cfg3soim.xcl</file>
       <file>$TOOLKIT_DIR$\inc\clib\stdio.h</file>
+      <file>$PROJ_DIR$\cooking.h</file>
       <file>$PROJ_DIR$\protocol.h</file>
       <file>$TOOLKIT_DIR$\inc\bitdefinitions\iom16.inc</file>
       <file>$PROJ_DIR$\adc.h</file>
       <file>$TOOLKIT_DIR$\inc\clib\stdarg.h</file>
-      <file>$PROJ_DIR$\cooking.h</file>
       <file>$PROJ_DIR$\Release\Obj\spi.r90</file>
       <file>$TOOLKIT_DIR$\inc\inavr.h</file>
       <file>$PROJ_DIR$\spi.h</file>
@@ -296,6 +296,9 @@
       <file>$PROJ_DIR$\name.h</file>
       <file>$TOOLKIT_DIR$\inc\intrinsics.h</file>
       <file>$PROJ_DIR$\timer.h</file>
+      <file>$PROJ_DIR$\Release\Obj\ds18b20.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\ds18b20.r90</file>
+      <file>$PROJ_DIR$\Release\Obj\spi.pbi</file>
       <file>$PROJ_DIR$\Release\Obj\cooking.pbi</file>
       <file>$PROJ_DIR$\Release\Obj\main.r90</file>
       <file>$PROJ_DIR$\Release\Obj\main.pbi</file>
@@ -303,9 +306,6 @@
       <file>$PROJ_DIR$\Release\Obj\protocol.pbi</file>
       <file>$PROJ_DIR$\Release\Obj\timer.r90</file>
       <file>$PROJ_DIR$\ds18b20.h</file>
-      <file>$PROJ_DIR$\Release\Obj\spi.pbi</file>
-      <file>$PROJ_DIR$\Release\Obj\ds18b20.r90</file>
-      <file>$PROJ_DIR$\Release\Obj\ds18b20.pbi</file>
       <file>$PROJ_DIR$\Release\Obj\uart.r90</file>
       <file>$PROJ_DIR$\Release\Obj\adc.r90</file>
       <file>$PROJ_DIR$\Release\Obj\adc.pbi</file>
@@ -330,11 +330,11 @@
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 19 12 10 18 23 27</file>
+          <file> 20 12 10 19 23 27</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 19 12 10 18 23 27</file>
+          <file> 20 12 10 19 23 27</file>
         </tool>
       </inputs>
     </file>
@@ -343,21 +343,21 @@
       <outputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 37</file>
+          <file> 30</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 38</file>
+          <file> 29</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 12 10 18 23 27 35 11</file>
+          <file> 12 10 19 23 27 38 9</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 12 10 18 23 27 35 11</file>
+          <file> 12 10 19 23 27 38 9</file>
         </tool>
       </inputs>
     </file>
@@ -370,17 +370,17 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 29</file>
+          <file> 32</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 12 10 18 23 27 21 28 19</file>
+          <file> 12 10 19 23 27 17 28 20</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 12 10 18 23 27 21 28 19</file>
+          <file> 12 10 19 23 27 17 28 20</file>
         </tool>
       </inputs>
     </file>
@@ -389,21 +389,21 @@
       <outputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 30</file>
+          <file> 33</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 31</file>
+          <file> 34</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 12 10 18 23 27 26 11 19 17 24 28 21</file>
+          <file> 12 10 19 23 27 26 9 20 18 24 28 17</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 12 10 18 23 27 26 11 19 17 24 28 21</file>
+          <file> 12 10 19 23 27 26 9 20 18 24 28 17</file>
         </tool>
       </inputs>
     </file>
@@ -416,17 +416,17 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 33</file>
+          <file> 36</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 17 12 10 18 11 23 27 13 14 16 20 26 19 21 28</file>
+          <file> 18 12 10 19 9 23 27 13 14 16 21 26 20 17 28</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 17 12 10 18 11 23 27 13 14 16 20 26 19 21 28</file>
+          <file> 18 12 10 19 9 23 27 13 14 16 21 26 20 17 28</file>
         </tool>
       </inputs>
     </file>
@@ -439,17 +439,17 @@
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 36</file>
+          <file> 31</file>
         </tool>
       </outputs>
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 12 10 18 23 27 24</file>
+          <file> 12 10 19 23 27 24</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 12 10 18 23 27 24</file>
+          <file> 12 10 19 23 27 24</file>
         </tool>
       </inputs>
     </file>
@@ -458,7 +458,7 @@
       <outputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 34</file>
+          <file> 37</file>
         </tool>
         <tool>
           <name>BICOMP</name>
@@ -468,11 +468,11 @@
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 12 10 18 23 27 28 26</file>
+          <file> 12 10 19 23 27 28 26</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 12 10 18 23 27 28 26</file>
+          <file> 12 10 19 23 27 28 26</file>
         </tool>
       </inputs>
     </file>
@@ -491,11 +491,11 @@
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 11 12 10 18 23 27 17</file>
+          <file> 9 12 10 19 23 27 18</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 11 12 10 18 23 27 17</file>
+          <file> 9 12 10 19 23 27 18</file>
         </tool>
       </inputs>
     </file>
@@ -504,7 +504,7 @@
       <outputs>
         <tool>
           <name>XLINK</name>
-          <file> 32</file>
+          <file> 35</file>
         </tool>
       </outputs>
     </file>
@@ -513,7 +513,7 @@
       <inputs>
         <tool>
           <name>XLINK</name>
-          <file> 9 15 40 45 37 30 42 22 34 39 25</file>
+          <file> 11 15 40 45 30 33 42 22 37 39 25</file>
         </tool>
       </inputs>
     </file>
@@ -522,7 +522,7 @@
       <inputs>
         <tool>
           <name>BILINK</name>
-          <file> 41 29 38 31 33 36 43 46</file>
+          <file> 41 32 29 34 36 31 43 46</file>
         </tool>
       </inputs>
     </file>
