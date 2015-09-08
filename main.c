@@ -206,7 +206,7 @@ void main(void) {
   while(1)  {
     
   
- 
+
  __sleep(); 
  if(ready){
    PORTB |= (1<<0);  
