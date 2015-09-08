@@ -1035,7 +1035,7 @@
         </option>
         <option>
           <name>LCHeapSize</name>
-          <state>0x20</state>
+          <state>0x200</state>
         </option>
         <option>
           <name>SCCStackSize</name>
