@@ -35,7 +35,7 @@ char int1_flag =0;
  
 
   
-#pragma vector = ANA_COMP_vect 
+/*#pragma vector = ANA_COMP_vect 
 __interrupt void ANA_COMP(void) {
    flag_null=1;
    time_tic=0;
@@ -52,10 +52,9 @@ __interrupt void INT0_vectINT(void) {
 __interrupt void INT1_vectINT(void) {
   if(int1_flag)  return;
   else int1_flag = 1;
-}
+}*/
 
 #define TIME_UPDATE 75
-
 #pragma vector = TIMER2_OVF_vect 
 __interrupt void TIMER2_OVF_vectINT(void)
 {
@@ -115,7 +114,7 @@ char i;
   SetTimer(2);
   while(GetTimer()>0);
   
-  sprintf(tx_buff, "GET /update?api_key=1CV2GX9SLOJGA16D&field3=");//28\r\n\r\n");
+  sprintf(tx_buff, "GET /update?api_key=1CV2GX9SLOJGA16D&field4=");//28\r\n\r\n");
   for(i=0;i<counter; i++){
     tx_buff[44+i] = tx_buff2[i];
   }
@@ -170,11 +169,12 @@ void main(void) {
 
   
   DDRA=0xF8;
-  DDRB=0x01;
+  DDRB=0x03;
   DDRC=0x00;
   DDRD=0x22;
   PORTD = 0x0F;
   PORTC=255;
+  
   
   
   
@@ -205,7 +205,8 @@ void main(void) {
   
   while(1)  {
     
-  
+
+
 
  __sleep(); 
  if(ready){
@@ -213,7 +214,7 @@ void main(void) {
    TIMSK &=~(1<<TOIE0); // Enable Timer
    t = GetTempDS18B20();
    TIMSK |= (1<<TOIE0); // Enable Timer
-   SendToServer(t,power);
+  SendToServer(t,power);
    ready=0;
    timeout=0;
    PORTB &=~ (1<<0);  

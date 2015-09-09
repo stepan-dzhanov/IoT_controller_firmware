@@ -239,7 +239,7 @@ void Processing_reqest (void) {
           t = StrToInt (&rx_buff[16]);
           timee[1] = t*60;
           InitCoock(tempee, timee, 2);
-          sprintf(tx_buff, "OK\n");
+        //  sprintf(tx_buff, "OK\n");
           TransmitString( tx_buff,strlen(tx_buff));
           clear_buff(rx_buff);
           pointer =0;
@@ -251,7 +251,7 @@ void Processing_reqest (void) {
           result=(int)((float)result/7.5) + 15;
           sprintf(tx_buff, "T=");
           TransmitString( tx_buff, 2);
-          sprintf(tx_buff,"%d",result,"/n");
+        //  sprintf(tx_buff,"%d",result,"/n");
           TransmitString( tx_buff, strlen(tx_buff));
           tx_buff[0] = 0x0D;
           tx_buff[1] = 0x0A;
@@ -261,7 +261,7 @@ void Processing_reqest (void) {
           break;  
         
         default:
-          sprintf(tx_buff, "Invalid command\n");
+         // sprintf(tx_buff, "Invalid command\n");
           TransmitString( tx_buff, strlen(tx_buff));
           clear_buff(rx_buff);
            pointer =0;
