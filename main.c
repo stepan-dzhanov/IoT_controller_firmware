@@ -30,29 +30,7 @@ char int1_flag =0;
  char device_addr=0;
  char power=0;
 
- //int mt[3] = {100, 80, 100};
- //int mtime [3] = {120,60,30};
  
-
-  
-/*#pragma vector = ANA_COMP_vect 
-__interrupt void ANA_COMP(void) {
-   flag_null=1;
-   time_tic=0;
-   TCNT0=144;
-}
-
-#pragma vector = INT0_vect 
-__interrupt void INT0_vectINT(void) {
-  if(int0_flag)  return;
-  else int0_flag = 1;
-}
-
-#pragma vector = INT1_vect 
-__interrupt void INT1_vectINT(void) {
-  if(int1_flag)  return;
-  else int1_flag = 1;
-}*/
 
 #define TIME_UPDATE 75
 #pragma vector = TIMER2_OVF_vect 
@@ -63,9 +41,6 @@ __interrupt void TIMER2_OVF_vectINT(void)
      timeout =0;
      ready = 1;
    }
-   
- //   asm volatile("nop"::);
-    //_delay_us(10);
 }
 
 SendToServer(int data1, int data2) {
@@ -136,6 +111,63 @@ char i;
   SetTimer(5);
   while(GetTimer()>0);
   
+  
+  sprintf(tx_buff, "AT+RST\r\n");
+  TransmitString(tx_buff,strlen(tx_buff));
+  SetTimer(4);
+  while(GetTimer()>0);
+  sprintf(tx_buff, "AT+CIPMUX=1\r\n");
+  TransmitString(tx_buff,strlen(tx_buff));
+  SetTimer(1);
+  while(GetTimer()>0);
+  sprintf(tx_buff, "AT+CIPSTART=4,\"TCP\",\"184.106.153.149\",80\r\n");
+  TransmitString(tx_buff,strlen(tx_buff));
+  SetTimer(4);
+  while(GetTimer()>0);
+  
+  sprintf(tx_buff, "AT+CIPSEND=4,");
+  
+  sprintf(tx_buff2,"%d",data2,"/n");
+  counter = strlen(tx_buff2);
+  sprintf(tx_buff1,"%d",counter+48,"/n");
+                 ///TransmitString(tx_buff1,strlen(tx_buff1));
+  
+  for(i=0;i<2; i++){
+    tx_buff[13+i] = tx_buff1[i];
+  }
+
+  tx_buff[13+i] = '\r';
+  i++;
+  tx_buff[13+i] = '\n';
+  i++;
+  tx_buff[13+i] = 0;
+  
+  
+  TransmitString(tx_buff,strlen(tx_buff));
+  SetTimer(2);
+  while(GetTimer()>0);
+  
+  sprintf(tx_buff, "GET /update?api_key=1CV2GX9SLOJGA16D&field5=");//28\r\n\r\n");
+  for(i=0;i<counter; i++){
+    tx_buff[44+i] = tx_buff2[i];
+  }
+          
+
+  tx_buff[44+i] = '\r';
+  i++;
+  tx_buff[44+i] = '\n';
+  
+  i++;
+  tx_buff[44+i] = '\r';
+  i++;
+  tx_buff[44+i] = '\n';
+  i++;
+  tx_buff[44+i] = 0;
+  
+  TransmitString(tx_buff,strlen(tx_buff));
+  
+  SetTimer(5);
+  while(GetTimer()>0);
  
   
 }
@@ -168,7 +200,7 @@ void main(void) {
   float temp2;
 
   
-  DDRA=0xF8;
+  DDRA=0x78;
   DDRB=0x03;
   DDRC=0x00;
   DDRD=0x22;
@@ -214,7 +246,11 @@ void main(void) {
    TIMSK &=~(1<<TOIE0); // Enable Timer
    t = GetTempDS18B20();
    TIMSK |= (1<<TOIE0); // Enable Timer
-  SendToServer(t,power);
+   power = StartADC(0)/4;
+   // power = StartADC(7);
+   if(power>100) power = 100;
+   SendToServer(t,power);
+ 
    ready=0;
    timeout=0;
    PORTB &=~ (1<<0);  
