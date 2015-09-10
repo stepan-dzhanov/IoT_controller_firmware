@@ -2,7 +2,7 @@
 
 <project>
   <fileVersion>2</fileVersion>
-  <fileChecksum>116564522</fileChecksum>
+  <fileChecksum>3552515100</fileChecksum>
   <configuration>
     <name>Debug</name>
     <outputs>
@@ -315,6 +315,10 @@
       <file>$PROJ_DIR$\Release\Obj\cooking.r90</file>
       <file>$PROJ_DIR$\Release\Obj\uart.pbi</file>
       <file>$PROJ_DIR$\Release\List\Dimmer.map</file>
+      <file>$PROJ_DIR$\Release\Obj\wi_fi.pbi</file>
+      <file>$PROJ_DIR$\Release\Obj\wi_fi.r90</file>
+      <file>$PROJ_DIR$\wi_fi.c</file>
+      <file>$PROJ_DIR$\wi_fi.h</file>
     </outputs>
     <file>
       <name>$PROJ_DIR$\adc.c</name>
@@ -400,11 +404,11 @@
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 12 10 18 22 27 26 9 19 17 23 28 21 38 13 14 16 20</file>
+          <file> 12 10 18 22 27 26 9 19 17 23 28 21 38 51 13 14 16 20</file>
         </tool>
         <tool>
           <name>BICOMP</name>
-          <file> 12 10 18 22 27 26 9 19 17 23 28 21 38 13 14 16 20</file>
+          <file> 12 10 18 22 27 26 9 19 17 23 28 21 38 51</file>
         </tool>
       </inputs>
     </file>
@@ -520,7 +524,7 @@
       <inputs>
         <tool>
           <name>XLINK</name>
-          <file> 11 15 40 45 25 33 42 30 37 39 24</file>
+          <file> 11 15 40 45 25 33 42 30 37 39 49 24</file>
         </tool>
       </inputs>
     </file>
@@ -529,14 +533,33 @@
       <inputs>
         <tool>
           <name>BILINK</name>
-          <file> 41 32 31 34 36 29 43 46</file>
+          <file> 41 32 31 34 36 29 43 46 48</file>
         </tool>
       </inputs>
     </file>
-    <forcedrebuild>
-      <name>$PROJ_DIR$\RFM70_init.c</name>
-      <tool>ICCAVR</tool>
-    </forcedrebuild>
+    <file>
+      <name>$PROJ_DIR$\wi_fi.c</name>
+      <outputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 49</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 48</file>
+        </tool>
+      </outputs>
+      <inputs>
+        <tool>
+          <name>ICCAVR</name>
+          <file> 12 10 18 22 27 16 20 14 13 26 9 28 51</file>
+        </tool>
+        <tool>
+          <name>BICOMP</name>
+          <file> 12 10 18 22 27 16 20 14 13 26 9 28 51</file>
+        </tool>
+      </inputs>
+    </file>
     <forcedrebuild>
       <name>[REBUILD_ALL]</name>
     </forcedrebuild>

@@ -18,7 +18,13 @@
 
 void InitTimer();
 int GetTimer();
+void OffTimer ();
+void OnTimer ();
 
 void SetTimer(int tm);
 void Beep(int b_time);
+
+void RTCInit(void);
+char CheckSleepTimeout();
+void ResetSleepTimeout();
 #endif

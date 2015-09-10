@@ -5,16 +5,6 @@
 #include "timer.h"
 #include "name.h"
 
-extern int position;
-extern unsigned char time_pulse;
-extern unsigned int  time_phase;
-extern unsigned char time_tic;
-extern unsigned int  volatile time_set;
-extern unsigned char power_tic;
-extern unsigned char host_power;
-extern char flag_null;
-extern char flag_control;
-extern char flag_ac;
 
 
 
@@ -24,6 +14,9 @@ static  int loc_tic =0;
 static int loc_sec =0;
 static char b_flg =0;
 static int b_set;
+static int timeout =0;
+static char ready = 0;
+
 
 void Beep(int b_time){
   
@@ -49,14 +42,18 @@ void InitTimer()  {
 
 }
 
+void OffTimer (){
+   TIMSK &=~(1<<TOIE0); // Enable Timer
+}
+void OnTimer ()  {
+   TIMSK |= (1<<TOIE0); // Enable Timer
+}
+
 #pragma vector = TIMER0_OVF_vect  
 __interrupt void TIMER0_OVF(void) {
   TCNT0=144;
   
-  time_phase++;
-  time_tic++;
-  time_pulse++;
-  time_set++;
+
   loc_tic++;
   if (loc_tic>=4408)  {
     loc_tic = 0;
@@ -68,34 +65,43 @@ __interrupt void TIMER0_OVF(void) {
       RESET_BEP
       b_flg =0;
     }
+  }
     
-  }
-//**************************Control Phase*******************************
-  if (time_phase>=CONTROL_PHASE_TIME)  {
-    time_phase=0;
-    if ((flag_null==0)&&(time_tic>+PERIOD_TIME))  {
-      flag_ac=0;
-    }
-  }
-  if (flag_ac==0) ResetLed;
-  if (flag_ac==1) SetLed;
-//*************************End control phase****************************  
-  if (flag_null==0)  return;
   
-  if ((flag_control==1)&&(time_pulse==PULSE_TIME))  {
-    ResetControl
-    flag_control=0;
-  }
-  
-  if ((flag_null==1)&&(time_tic>=(2*PERIOD_TIME+2)))  {
-    flag_null=0;
-  }
-  
-  
-  if ( (flag_null==1)&&( (time_tic==power_tic)||(time_tic==power_tic+PERIOD_TIME) ) )  {
-      time_pulse=0;
-      if (power_tic<MAX_POWER_TIC) SetControl
-      flag_control=1;
-      flag_ac=1;
-  }   
 } 
+
+#define TIME_UPDATE 75
+#pragma vector = TIMER2_OVF_vect 
+__interrupt void TIMER2_OVF_vectINT(void)
+{
+   timeout++;
+   if (timeout>=TIME_UPDATE) {
+     timeout =0;
+     ready = 1;
+   }
+}
+
+char CheckSleepTimeout()  {
+  return ready;
+}
+void ResetSleepTimeout()  {
+  ready = 0;
+  timeout = 0;
+}
+
+void RTCInit(void)
+{
+     TCCR0 = 0X02;
+     MCUCR |= (1<<SM0)|(1<<SM1)|(1<<SE);
+    //Disable timer2 interrupts
+    //TIMSK  = 0;
+    //Enable asynchronous mode
+    ASSR  = (1<<AS2);
+    //set initial counter value
+    TCNT2=0;
+    //set prescaller 1024
+    TCCR2 |= (1<<CS22)|(1<<CS21)|(1<<CS20);
+    while (ASSR & ((1<<TCN2UB)|(1<<TCR2UB)));
+    //enable TOV2 interrupt
+    TIMSK  |= (1<<TOIE2)|(1<<TOIE0);
+}

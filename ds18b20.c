@@ -22,19 +22,6 @@ void delay_us (int timeout)  {
   }
 }
 
-void testPin()  {
-  
-  PIN_TO_OUT
-    while(1){
-  SET_PIN_DRV
-  delay_us (1);
-  RESET_PIN_DRV
-  delay_us (1);
-    }
-  PIN_TO_IN
-   
-  
-}
 
 char InitDS18B20(){
   char a;
@@ -102,8 +89,8 @@ return d;
 }
 
 unsigned char GetTempDS18B20() {
-  unsigned char temp1, temp2, sign, temperature, temp_drob,x;
-  char tx_buff1[64];
+  unsigned char temp1, temp2;
+ 
   int i;
   InitDS18B20();
   TxDS18B20(0xCC);
@@ -120,21 +107,6 @@ unsigned char GetTempDS18B20() {
   TxDS18B20(0xBE);
   temp1 = RxDS18B20();    //читаем младший байт
   temp2 = RxDS18B20();    //читаем старший байт
-  
-  //USART_Transmit( temp1);
-  // USART_Transmit( temp2);
- // x = RxDS18B20();
- // x = RxDS18B20();
-//  x = RxDS18B20();
- // x = RxDS18B20();
-//  x = RxDS18B20();
- // x = RxDS18B20();
- // x = RxDS18B20();
-  
-  
- 
- // temp_drob = temp1 & 0xFF;           //Записываем дробную часть в отдельную переменную
-  //temp_drob = ((temp_drob*6)+2)/10;         //Переводим в нужное дробное число
   temp1 = temp1>>4;
   temp1 = temp1&0x0F;
  // sign = temp2 & 0x80;                      //определяем знак температуры
