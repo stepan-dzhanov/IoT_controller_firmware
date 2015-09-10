@@ -70,12 +70,12 @@ __interrupt void TIMER0_OVF(void) {
   
 } 
 
-#define TIME_UPDATE 75
+
 #pragma vector = TIMER2_OVF_vect 
 __interrupt void TIMER2_OVF_vectINT(void)
 {
    timeout++;
-   if (timeout>=TIME_UPDATE) {
+   if (timeout>=TIME_SLEEP) {
      timeout =0;
      ready = 1;
    }
