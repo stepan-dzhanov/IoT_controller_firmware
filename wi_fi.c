@@ -22,7 +22,7 @@ char tx_buff2 [64];
 char counter;
 char i;
   
-  
+  if (!data1) return;
   sprintf(tx_buff, "AT+RST\r\n");
   TransmitString(tx_buff,strlen(tx_buff));
   SetTimer(4);
@@ -81,6 +81,7 @@ char i;
   while(GetTimer()>0);
   
   
+  if (!data2) return;
   sprintf(tx_buff, "AT+RST\r\n");
   TransmitString(tx_buff,strlen(tx_buff));
   SetTimer(4);

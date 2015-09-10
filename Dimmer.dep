@@ -404,7 +404,7 @@
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 12 10 18 22 27 26 9 19 17 23 28 21 38 51 13 14 16 20</file>
+          <file> 12 10 18 22 27 26 9 19 17 23 28 21 38 51</file>
         </tool>
         <tool>
           <name>BICOMP</name>
