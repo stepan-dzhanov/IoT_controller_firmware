@@ -16,7 +16,7 @@
 #define STOP_BEEP      15000
 
 
-#define TIME_SLEEP 75 // 10 min timeout
+#define TIME_SLEEP 225 // 75=10 min timeout
 
 void InitTimer();
 int GetTimer();
