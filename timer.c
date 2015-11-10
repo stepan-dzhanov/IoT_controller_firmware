@@ -58,7 +58,7 @@ __interrupt void TIMER0_OVF(void) {
   time_pulse++;
   time_set++;
   loc_tic++;
-  if (loc_tic>=4408)  {
+  if (loc_tic>=408)  {
     loc_tic = 0;
     if(!(loc_sec==0))loc_sec--;
   }
