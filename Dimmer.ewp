@@ -243,7 +243,7 @@
         </option>
         <option>
           <name>CCDefines</name>
-          <state></state>
+          <state>_DEBUG</state>
         </option>
         <option>
           <name>CCPreprocFile</name>
@@ -329,7 +329,7 @@
         <option>
           <name>CCOptimization</name>
           <version>1</version>
-          <state>2</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCAllowList</name>
@@ -433,7 +433,7 @@
         <option>
           <name>CCOptimizationSlave</name>
           <version>1</version>
-          <state>2</state>
+          <state>1</state>
         </option>
         <option>
           <name>CCOutputFile</name>

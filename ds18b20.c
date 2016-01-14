@@ -101,10 +101,12 @@ PIN_TO_OUT
 return d;
 }
 
-unsigned char GetTempDS18B20() {
-  unsigned char temp1, temp2, sign, temperature, temp_drob,x;
+signed char GetTempDS18B20() {
+  unsigned char temp1, temp2, sign, temp_drob,x;
+  signed char temperature;
   char tx_buff1[64];
   int i;
+#ifndef _DEBUG
   InitDS18B20();
   TxDS18B20(0xCC);
   
@@ -118,8 +120,15 @@ unsigned char GetTempDS18B20() {
   
 
   TxDS18B20(0xBE);
+#endif
   temp1 = RxDS18B20();    //читаем младший байт
   temp2 = RxDS18B20();    //читаем старший байт
+  
+#ifdef _DEBUG
+  temp1 = 0x5E;    //читаем младший байт
+  temp2 = 0xFF;
+  
+#endif
   
   //USART_Transmit( temp1);
   // USART_Transmit( temp2);
@@ -137,21 +146,23 @@ unsigned char GetTempDS18B20() {
   //temp_drob = ((temp_drob*6)+2)/10;         //Переводим в нужное дробное число
   temp1 = temp1>>4;
   temp1 = temp1&0x0F;
- // sign = temp2 & 0x80;                      //определяем знак температуры
+  sign = temp2 & 0x80;                      //определяем знак температуры
   temp2 = temp2<<4;
   temp2 &= 0x70;
   temp2 |= temp1;                           //помещаем все в одну переменную
+  temperature = temp2;
  
    //USART_Transmit( temp2);
-//if (sign) {                               //если минус
-       //     temperature = 127-temp2;      //глобальная переменная
+if (sign) {                               //если минус
+            temperature = 127-temp2;      //глобальная переменная
+            temperature = -1*temperature;
        //     temp_drob = 10 - temp_drob;   //глобальная переменная
-        //   }   else temperature = temp2;
+           }   else temperature = temp2;
 
 __delay_cycles(10000);
 
  
-return temp2;
+return temperature ;
 }
   
   

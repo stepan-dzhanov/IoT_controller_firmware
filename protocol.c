@@ -10,8 +10,8 @@
 #include "timer.h"
 
 extern char int0_flag,int1_flag;
-char rx_buff[32];
-char tx_buff[32];
+static char rx_buff[32];
+static char tx_buff[32];
 int tempee[10];
 int timee [10];
 static char pointer =0;

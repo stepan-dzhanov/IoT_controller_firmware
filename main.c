@@ -29,6 +29,8 @@ char int1_flag =0;
 
  char device_addr=0;
  char power=0;
+ 
+
 
  //int mt[3] = {100, 80, 100};
  //int mtime [3] = {120,60,30};
@@ -54,7 +56,7 @@ __interrupt void INT1_vectINT(void) {
   else int1_flag = 1;
 }*/
 
-#define TIME_UPDATE 75
+#define TIME_UPDATE 225
 #pragma vector = TIMER2_OVF_vect 
 __interrupt void TIMER2_OVF_vectINT(void)
 {
@@ -71,14 +73,15 @@ __interrupt void TIMER2_OVF_vectINT(void)
 SendToServer(int data1, int data2) {
   
  
-  
-char tx_buff [64];
-char tx_buff1 [64];
-char tx_buff2 [64];
+
+ char tx_buff2 [64];
+  char tx_buff [64];
+ char tx_buff1 [64];
+
 char counter;
 char i;
   
-  
+#ifndef _DEBUG  
   sprintf(tx_buff, "AT+RST\r\n");
   TransmitString(tx_buff,strlen(tx_buff));
   SetTimer(4);
@@ -91,10 +94,11 @@ char i;
   TransmitString(tx_buff,strlen(tx_buff));
   SetTimer(4);
   while(GetTimer()>0);
+#endif
   
   sprintf(tx_buff, "AT+CIPSEND=4,");
   
-  sprintf(tx_buff2,"%d",data1,"/n");
+  sprintf(tx_buff,"%d",data1,"/n");
   counter = strlen(tx_buff2);
   sprintf(tx_buff1,"%d",counter+48,"/n");
                  ///TransmitString(tx_buff1,strlen(tx_buff1));
@@ -114,7 +118,7 @@ char i;
   SetTimer(2);
   while(GetTimer()>0);
   
-  sprintf(tx_buff, "GET /update?api_key=1CV2GX9SLOJGA16D&field4=");//28\r\n\r\n");
+  sprintf(tx_buff, "GET /update?api_key=1CV2GX9SLOJGA16D&field3=");//28\r\n\r\n");
   for(i=0;i<counter; i++){
     tx_buff[44+i] = tx_buff2[i];
   }
@@ -157,11 +161,14 @@ void RTCInit(void)
     TIMSK  |= (1<<TOIE2)|(1<<TOIE0);
 }
 
+
+
+
 void main(void) {
   
   char data = 15;
   unsigned int temp, power;
-  char t;
+  signed char t;
   
   char tx_buff [64];
   
@@ -176,7 +183,7 @@ void main(void) {
   PORTC=255;
   
   
-  
+#ifndef _DEBUG 
   
   RTCInit();
  // TCCR0 = 0X02;  //Divider   1/8
@@ -199,6 +206,11 @@ void main(void) {
   __delay_cycles(100000);
   __enable_interrupt();
   
+#endif
+  
+#ifdef _DEBUG
+  ready =1;
+#endif
   
   
 
