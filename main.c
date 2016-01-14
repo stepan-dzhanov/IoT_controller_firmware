@@ -98,7 +98,7 @@ char i;
   
   sprintf(tx_buff, "AT+CIPSEND=4,");
   
-  sprintf(tx_buff,"%d",data1,"/n");
+  sprintf(tx_buff2,"%d",data1,"/n");
   counter = strlen(tx_buff2);
   sprintf(tx_buff1,"%d",counter+48,"/n");
                  ///TransmitString(tx_buff1,strlen(tx_buff1));
