@@ -70,13 +70,14 @@ __interrupt void TIMER2_OVF_vectINT(void)
     //_delay_us(10);
 }
 
-SendToServer(int data1, int data2) {
+SendToServer(signed char data1, int data2) {
   
  
 
  char tx_buff2 [64];
-  char tx_buff [64];
+ char tx_buff [64];
  char tx_buff1 [64];
+
 
 char counter;
 char i;
@@ -114,9 +115,12 @@ char i;
   tx_buff[13+i] = 0;
   
   
+ 
+#ifndef _DEBUG
   TransmitString(tx_buff,strlen(tx_buff));
   SetTimer(2);
   while(GetTimer()>0);
+#endif
   
   sprintf(tx_buff, "GET /update?api_key=1CV2GX9SLOJGA16D&field3=");//28\r\n\r\n");
   for(i=0;i<counter; i++){
