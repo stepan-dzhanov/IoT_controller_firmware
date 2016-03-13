@@ -118,13 +118,13 @@ void main(void) {
   float temp2;
 
   
-  DDRA=0xF8;
+  DDRA=0x73;
   DDRB=0xB3;
   DDRC=0x00;
   DDRD=0x22;
   PORTD = 0x0F;
   PORTC=255;
-  
+  MCUCR |=(1<<SM1)|(1<<SE); // power down enable 
   
 #ifndef _DEBUG 
   
@@ -135,7 +135,7 @@ void main(void) {
   
  
  
-  //__enable_interrupt();
+  __enable_interrupt();
   
 #endif
   
@@ -143,19 +143,19 @@ void main(void) {
   
   
   
-   // TM_NRF24L01_Init(15, 32);
+    TM_NRF24L01_Init(15, 32);
   
     
     /* Set 2MBps data rate and -18dBm output power */
-  //  TM_NRF24L01_SetRF(TM_NRF24L01_DataRate_2M, TM_NRF24L01_OutputPower_M18dBm);
+    TM_NRF24L01_SetRF(TM_NRF24L01_DataRate_2M, TM_NRF24L01_OutputPower_M18dBm);
     
     /* Set my address, 5 bytes */
-    //TM_NRF24L01_SetMyAddress(MyAddress);
+    TM_NRF24L01_SetMyAddress(MyAddress);
     /* Set TX address, 5 bytes */
-   // TM_NRF24L01_SetTxAddress(TxAddress);
-    
-    __sleep();
-    PORTB |= (1<<0);
+    TM_NRF24L01_SetTxAddress(TxAddress);
+    //TM_NRF24L01_PowerDown();
+    //__sleep();
+    //PORTB |= (1<<0);
     
    
   
@@ -167,10 +167,19 @@ void main(void) {
             /* Get data from NRF24L01+ */
             TM_NRF24L01_GetData(dataIn);
             sprintf((char *)dataOut, "arm");
-            if(!memcmp(&dataIn,&dataOut,3))PORTB |= (1<<0);
+            if(!memcmp(&dataIn,&dataOut,3)){
+              PORTB |= (1<<0);
+              PORTA |= (1<<0);
+            }
+             sprintf((char *)dataOut, "drm");
+            if(!memcmp(&dataIn,&dataOut,3)){
+              PORTB &=~ (1<<0);
+              PORTA &=~ (1<<0);
+            }
             
             /* Send it back, automatically goes to TX mode */
-            TM_NRF24L01_Transmit(dataIn);
+            sprintf((char *)dataOut, "OK");
+            TM_NRF24L01_Transmit(dataOut);
             
             
             do {
