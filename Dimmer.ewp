@@ -1964,6 +1964,9 @@
     <name>$PROJ_DIR$\ds18b20.c</name>
   </file>
   <file>
+    <name>$PROJ_DIR$\m8_nrf24l01.c</name>
+  </file>
+  <file>
     <name>$PROJ_DIR$\main.c</name>
   </file>
   <file>

@@ -1,17 +1,15 @@
 #include <iom16.h>
 #include <inavr.h>
 #include "name.h"
-#include "uart.h"
-#include "adc.h"
-#include "protocol.h"
-#include "spi.h"
-#include "timer.h"
-#include "cooking.h"
-#include "ds18b20.h"
-
-
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#include "spi.h"
+
+#include "m8_nrf24l01.h"
+
+
 static int timeout =0;
 static char ready =0;
 int position;
@@ -30,7 +28,24 @@ char int1_flag =0;
  char device_addr=0;
  char power=0;
  
-
+unsigned char TxAddress[] = {
+    0xE7,
+    0xE7,
+    0xE7,
+    0xE7,
+    0xE7
+};
+/* My address */
+unsigned char MyAddress[] = {
+    0x7E,
+    0x7E,
+    0x7E,
+    0x7E,
+    0x7E
+};
+ 
+ 
+unsigned char dataOut[32], dataIn[32];
 
  //int mt[3] = {100, 80, 100};
  //int mtime [3] = {120,60,30};
@@ -70,83 +85,7 @@ __interrupt void TIMER2_OVF_vectINT(void)
     //_delay_us(10);
 }
 
-SendToServer(signed char data1, int data2) {
-  
- 
 
- char tx_buff2 [64];
- char tx_buff [64];
- char tx_buff1 [64];
-
-
-char counter;
-char i;
-  
-#ifndef _DEBUG  
-  sprintf(tx_buff, "AT+RST\r\n");
-  TransmitString(tx_buff,strlen(tx_buff));
-  SetTimer(4);
-  while(GetTimer()>0);
-  sprintf(tx_buff, "AT+CIPMUX=1\r\n");
-  TransmitString(tx_buff,strlen(tx_buff));
-  SetTimer(1);
-  while(GetTimer()>0);
-  sprintf(tx_buff, "AT+CIPSTART=4,\"TCP\",\"184.106.153.149\",80\r\n");
-  TransmitString(tx_buff,strlen(tx_buff));
-  SetTimer(4);
-  while(GetTimer()>0);
-#endif
-  
-  sprintf(tx_buff, "AT+CIPSEND=4,");
-  
-  sprintf(tx_buff2,"%d",data1,"/n");
-  counter = strlen(tx_buff2);
-  sprintf(tx_buff1,"%d",counter+48,"/n");
-                 ///TransmitString(tx_buff1,strlen(tx_buff1));
-  
-  for(i=0;i<2; i++){
-    tx_buff[13+i] = tx_buff1[i];
-  }
-
-  tx_buff[13+i] = '\r';
-  i++;
-  tx_buff[13+i] = '\n';
-  i++;
-  tx_buff[13+i] = 0;
-  
-  
- 
-#ifndef _DEBUG
-  TransmitString(tx_buff,strlen(tx_buff));
-  SetTimer(2);
-  while(GetTimer()>0);
-#endif
-  
-  sprintf(tx_buff, "GET /update?api_key=1CV2GX9SLOJGA16D&field3=");//28\r\n\r\n");
-  for(i=0;i<counter; i++){
-    tx_buff[44+i] = tx_buff2[i];
-  }
-          
-
-  tx_buff[44+i] = '\r';
-  i++;
-  tx_buff[44+i] = '\n';
-  
-  i++;
-  tx_buff[44+i] = '\r';
-  i++;
-  tx_buff[44+i] = '\n';
-  i++;
-  tx_buff[44+i] = 0;
-  
-  TransmitString(tx_buff,strlen(tx_buff));
-  
-  SetTimer(5);
-  while(GetTimer()>0);
-  
- 
-  
-}
 
 void RTCInit(void)
 {
@@ -169,7 +108,7 @@ void RTCInit(void)
 
 
 void main(void) {
-  
+  TM_NRF24L01_Transmit_Status_t transmissionStatus;
   char data = 15;
   unsigned int temp, power;
   signed char t;
@@ -180,7 +119,7 @@ void main(void) {
 
   
   DDRA=0xF8;
-  DDRB=0x03;
+  DDRB=0xB3;
   DDRC=0x00;
   DDRD=0x22;
   PORTD = 0x0F;
@@ -189,73 +128,64 @@ void main(void) {
   
 #ifndef _DEBUG 
   
-  RTCInit();
- // TCCR0 = 0X02;  //Divider   1/8
- // TIMSK = (1<<TOIE0); // Enable Timer
- // GICR |= (1<<INT1)|(1<<INT0);
- 
- 
- 
+  //RTCInit();
   
-  
-  //SFIOR &=~(1<<ACME); //Disable analog multiplexor
- //ACSR=0;
- // ACSR |=(1<<ACIE); //Enable interrupt comparator
- // ACSR |=(1<<ACIS1); //Falling output edge
-  USART_Init(25);
-  InitADC();
-  SPIInit();
+ 
   __delay_cycles(1000000);
-  device_addr=0;
-  __delay_cycles(100000);
-  __enable_interrupt();
+  
+ 
+ 
+  //__enable_interrupt();
   
 #endif
   
-#ifdef _DEBUG
-  ready =1;
-#endif
+    
   
   
-
+  
+   // TM_NRF24L01_Init(15, 32);
+  
+    
+    /* Set 2MBps data rate and -18dBm output power */
+  //  TM_NRF24L01_SetRF(TM_NRF24L01_DataRate_2M, TM_NRF24L01_OutputPower_M18dBm);
+    
+    /* Set my address, 5 bytes */
+    //TM_NRF24L01_SetMyAddress(MyAddress);
+    /* Set TX address, 5 bytes */
+   // TM_NRF24L01_SetTxAddress(TxAddress);
+    
+    __sleep();
+    PORTB |= (1<<0);
+    
+   
   
   while(1)  {
+     if (TM_NRF24L01_DataReady()) {
+            
+       
+            
+            /* Get data from NRF24L01+ */
+            TM_NRF24L01_GetData(dataIn);
+            sprintf((char *)dataOut, "arm");
+            if(!memcmp(&dataIn,&dataOut,3))PORTB |= (1<<0);
+            
+            /* Send it back, automatically goes to TX mode */
+            TM_NRF24L01_Transmit(dataIn);
+            
+            
+            do {
+                transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
+            } while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
+            /* Send done */
+          
+            
+            /* Go back to RX Mode */
+            TM_NRF24L01_PowerUpRx();        
+        }
     
 
 
 
- __sleep(); 
- if(ready){
-   PORTB |= (1<<0);  
-   TIMSK &=~(1<<TOIE0); // Enable Timer
-   t = GetTempDS18B20();
-   TIMSK |= (1<<TOIE0); // Enable Timer
-  SendToServer(t,power);
-   ready=0;
-   timeout=0;
-   PORTB &=~ (1<<0);  
- }
- 
-   //PORTB &=~ (1<<0);
-  
-    // power = StartADC(1);
-    // if(power<440)power =100;
-   //  else power = (power - 440)*10;
-  
-     
-   //  TIMSK = 0X00; // Enable Timer
-   //  t = GetTempDS18B20();
-   //  TIMSK = 0X01; // Enable Timer
-   //  SendToServer(t,power);
-    // SetTimer(600);
-   //  while(GetTimer()>0);
-   
-    
-    
-    
-    
-   
- 
-  
+
  } 
 }

@@ -31,3 +31,65 @@ SPDR = 0x00;
 while(!(SPSR & (1<<SPIF)));
 return SPDR;
 }
+
+
+unsigned char TM_SPI_Send(char cData)   {
+/* Start transmission */
+SPDR = cData;
+/* Wait for transmission complete */
+
+while(!(SPSR & (1<<SPIF)));
+return SPDR;
+}
+
+void TM_SPI_SendMulti(unsigned char* dataOut, unsigned char* dataIn, int count) {
+	int i;
+	
+	
+	
+	for (i = 0; i < count; i++) {
+		/* Fill output buffer with data */
+		SPDR = dataOut[i];
+		
+		/* Wait for SPI to end everything */
+		while(!(SPSR & (1<<SPIF)))
+		
+		/* Read data register */
+		dataIn[i] = SPDR;
+	}
+}
+
+
+void TM_SPI_WriteMulti( unsigned char* dataOut, int count) {
+	int i;	
+	char x;
+	
+	
+	for (i = 0; i < count; i++) {
+		/* Fill output buffer with data */
+		SPDR = dataOut[i];
+		
+		/* Wait for SPI to end everything */
+		while(!(SPSR & (1<<SPIF)))
+		
+		/* Read data register */
+		x=SPDR;
+	}
+}
+
+void TM_SPI_ReadMulti(unsigned char* dataIn, unsigned char dummy, int count) {
+	int i;
+	
+	
+	
+	for (i = 0; i < count; i++) {
+		/* Fill output buffer with data */
+		SPDR  = dummy;
+		
+		/* Wait for SPI to end everything */
+		while(!(SPSR & (1<<SPIF)));
+		
+		/* Save data to buffer */
+		dataIn[i] = SPDR;
+	}
+}
