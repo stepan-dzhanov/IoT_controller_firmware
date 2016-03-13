@@ -168,13 +168,15 @@ void main(void) {
             TM_NRF24L01_GetData(dataIn);
             sprintf((char *)dataOut, "arm");
             if(!memcmp(&dataIn,&dataOut,3)){
-              PORTB |= (1<<0);
-              PORTA |= (1<<0);
+              
+              PORTB &=~ (1<<0);
+              PORTA &=~ (1<<0);
             }
              sprintf((char *)dataOut, "drm");
             if(!memcmp(&dataIn,&dataOut,3)){
-              PORTB &=~ (1<<0);
-              PORTA &=~ (1<<0);
+              
+              PORTB |= (1<<0);
+              PORTA |= (1<<0);
             }
             __delay_cycles(1000000);
             
