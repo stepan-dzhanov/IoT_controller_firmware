@@ -176,12 +176,19 @@ void main(void) {
               PORTB &=~ (1<<0);
               PORTA &=~ (1<<0);
             }
+            __delay_cycles(1000000);
             
             /* Send it back, automatically goes to TX mode */
             sprintf((char *)dataOut, "OK");
             TM_NRF24L01_Transmit(dataOut);
             
             
+            do {
+                transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
+            } while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
+            do {
+                transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
+            } while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
             do {
                 transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
             } while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
