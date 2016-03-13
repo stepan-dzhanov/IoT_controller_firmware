@@ -23,7 +23,7 @@ extern char flag_ac;
 static  int loc_tic =0;
 static int loc_sec =0;
 static char b_flg =0;
-static int b_set;
+static int b_set=0;
 
 void Beep(int b_time){
   
@@ -39,6 +39,7 @@ int GetTimer()  {
 
 void SetTimer(int tm)  {
   loc_sec = tm;
+  loc_tic=0;
 }
 
 
@@ -70,32 +71,5 @@ __interrupt void TIMER0_OVF(void) {
     }
     
   }
-//**************************Control Phase*******************************
-  if (time_phase>=CONTROL_PHASE_TIME)  {
-    time_phase=0;
-    if ((flag_null==0)&&(time_tic>+PERIOD_TIME))  {
-      flag_ac=0;
-    }
-  }
-  if (flag_ac==0) ResetLed;
-  if (flag_ac==1) SetLed;
-//*************************End control phase****************************  
-  if (flag_null==0)  return;
-  
-  if ((flag_control==1)&&(time_pulse==PULSE_TIME))  {
-    ResetControl
-    flag_control=0;
-  }
-  
-  if ((flag_null==1)&&(time_tic>=(2*PERIOD_TIME+2)))  {
-    flag_null=0;
-  }
-  
-  
-  if ( (flag_null==1)&&( (time_tic==power_tic)||(time_tic==power_tic+PERIOD_TIME) ) )  {
-      time_pulse=0;
-      if (power_tic<MAX_POWER_TIC) SetControl
-      flag_control=1;
-      flag_ac=1;
-  }   
+
 } 

@@ -6,7 +6,8 @@
 #include <stdlib.h>
 
 #include "spi.h"
-
+#include "adc.h"
+#include "timer.h"
 #include "m8_nrf24l01.h"
 
 
@@ -28,15 +29,15 @@ char int1_flag =0;
  char device_addr=0;
  char power=0;
  
-unsigned char TxAddress[] = {
+unsigned char MyAddress[] = {
     0xE7,
     0xE7,
     0xE7,
     0xE7,
     0xE7
 };
-/* My address */
-unsigned char MyAddress[] = {
+/* Receiver address */
+unsigned char TxAddress[] = {
     0x7E,
     0x7E,
     0x7E,
@@ -85,7 +86,11 @@ __interrupt void TIMER2_OVF_vectINT(void)
     //_delay_us(10);
 }
 
-
+#pragma vector = INT1_vect 
+__interrupt void INT1_vectINT(void) {
+  if(int1_flag)  return;
+  else int1_flag = 1;
+}
 
 void RTCInit(void)
 {
@@ -109,23 +114,27 @@ void RTCInit(void)
 
 void main(void) {
   TM_NRF24L01_Transmit_Status_t transmissionStatus;
-  char data = 15;
-  unsigned int temp, power;
-  signed char t;
+  char conf_flag = 0;
+  unsigned int bat_level, power;
+  volatile unsigned char t;
   
   char tx_buff [64];
   
   float temp2;
 
   
-  DDRA=0x73;
+  DDRA=0x03;
+  PORTA = 0x40;
   DDRB=0xB3;
   DDRC=0x00;
-  DDRD=0x22;
-  PORTD = 0x0F;
+  DDRD=0x62;
+  PORTD = 0x08;
   PORTC=255;
-  MCUCR |=(1<<SM1)|(1<<SE); // power down enable 
-  
+  MCUCR |=(1<<SM1)|(1<<SE);//|(1<<ISC10); // power down enable 
+  GICR |= (1<<INT1);	
+  InitTimer() ;
+  InitADC();
+   //Beep(500);
 #ifndef _DEBUG 
   
   //RTCInit();
@@ -141,6 +150,9 @@ void main(void) {
   
     
   
+  
+   
+    
   
   
     TM_NRF24L01_Init(15, 32);
@@ -160,25 +172,22 @@ void main(void) {
    
   
   while(1)  {
-     if (TM_NRF24L01_DataReady()) {
+     
             
        
             
-            /* Get data from NRF24L01+ */
-            TM_NRF24L01_GetData(dataIn);
-            sprintf((char *)dataOut, "arm");
-            if(!memcmp(&dataIn,&dataOut,3)){
-              PORTB |= (1<<0);
-              PORTA |= (1<<0);
-            }
-             sprintf((char *)dataOut, "drm");
-            if(!memcmp(&dataIn,&dataOut,3)){
-              PORTB &=~ (1<<0);
-              PORTA &=~ (1<<0);
-            }
             
+           GICR |= (1<<INT1);
+            __sleep();
+            InitADC();
+            __delay_cycles(100);
+            GICR &=~ (1<<INT1);	
+            bat_level = StartADC(2);
+            if (bat_level<500) PORTB |= (1<<0);
+            else PORTB &=~ (1<<0);
             /* Send it back, automatically goes to TX mode */
-            sprintf((char *)dataOut, "OK");
+            if (PINA&0x40)sprintf((char *)dataOut, "arm");
+            else sprintf((char *)dataOut, "drm");
             TM_NRF24L01_Transmit(dataOut);
             
             
@@ -189,8 +198,38 @@ void main(void) {
           
             
             /* Go back to RX Mode */
-            TM_NRF24L01_PowerUpRx();        
-        }
+            TM_NRF24L01_PowerUpRx();  
+            
+            SetTimer(2);
+            while(GetTimer()>0){
+              if(TM_NRF24L01_DataReady()) {
+                TM_NRF24L01_GetData(dataIn);
+                sprintf((char *)dataOut, "OK");
+                if (!memcmp(&dataIn,&dataOut,2)) {
+                  conf_flag =1;
+                  Beep(500);
+                  SetTimer(2);
+                  while(GetTimer()>0);
+                  conf_flag =0;
+                  break;
+                }
+                
+                
+              }
+               
+            }
+            PORTB &=~ (1<<0);
+            OffADC();
+            
+            
+            TM_NRF24L01_PowerDown();
+            while (1){
+              t=PIND&0x08;
+              if((t==0x08)) break;
+            }
+            
+            
+        
     
 
 

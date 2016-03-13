@@ -2,10 +2,10 @@
 #ifndef __TIMER__
 #define __TIMER__
 
-#define SetControl   PORTA |= (1<<3); // Set control pin for driver triac
-#define ResetControl PORTA &=~ (1<<3);
-#define SetLed PORTC |= (1<<4);
-#define ResetLed PORTC &=~ (1<<4);
+#define SetControl   ; // Set control pin for driver triac
+#define ResetControl ;
+#define SetLed PORTC ;
+#define ResetLed ;
 
 #define SET_BEP        PORTD |= (1<<6);
 #define RESET_BEP      PORTD &=~ (1<<6);
