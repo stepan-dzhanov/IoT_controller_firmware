@@ -147,7 +147,7 @@ void main(void) {
   
     
     /* Set 2MBps data rate and -18dBm output power */
-    TM_NRF24L01_SetRF(TM_NRF24L01_DataRate_2M, TM_NRF24L01_OutputPower_M18dBm);
+    TM_NRF24L01_SetRF(TM_NRF24L01_DataRate_2M, TM_NRF24L01_OutputPower_0dBm);
     
     /* Set my address, 5 bytes */
     TM_NRF24L01_SetMyAddress(MyAddress);
