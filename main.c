@@ -72,41 +72,12 @@ __interrupt void INT1_vectINT(void) {
   else int1_flag = 1;
 }*/
 
-#define TIME_UPDATE 225
-#pragma vector = TIMER2_OVF_vect 
-__interrupt void TIMER2_OVF_vectINT(void)
-{
-   timeout++;
-   if (timeout>=TIME_UPDATE) {
-     timeout =0;
-     ready = 1;
-   }
-   
- //   asm volatile("nop"::);
-    //_delay_us(10);
-}
+
 
 #pragma vector = INT1_vect 
 __interrupt void INT1_vectINT(void) {
   if(int1_flag)  return;
   else int1_flag = 1;
-}
-
-void RTCInit(void)
-{
-     TCCR0 = 0X02;
-     MCUCR |= (1<<SM0)|(1<<SM1)|(1<<SE);
-    //Disable timer2 interrupts
-    //TIMSK  = 0;
-    //Enable asynchronous mode
-    ASSR  = (1<<AS2);
-    //set initial counter value
-    TCNT2=0;
-    //set prescaller 1024
-    TCCR2 |= (1<<CS22)|(1<<CS21)|(1<<CS20);
-    while (ASSR & ((1<<TCN2UB)|(1<<TCR2UB)));
-    //enable TOV2 interrupt
-    TIMSK  |= (1<<TOIE2)|(1<<TOIE0);
 }
 
 
@@ -120,7 +91,7 @@ void main(void) {
   
   char tx_buff [64];
   
-  float temp2;
+ char timeout_water =0;
 
   
   DDRA=0x03;
@@ -130,14 +101,14 @@ void main(void) {
   DDRD=0x62;
   PORTD = 0x08;
   PORTC=255;
-  MCUCR |=(1<<SM1)|(1<<SE);//|(1<<ISC10); // power down enable 
-  GICR |= (1<<INT1);	
+ 
+ // GICR |= (1<<INT1);	
   InitTimer() ;
   InitADC();
    //Beep(500);
 #ifndef _DEBUG 
   
-  //RTCInit();
+  RTCInit();
   
  
   __delay_cycles(1000000);
@@ -155,7 +126,7 @@ void main(void) {
     
   
   
-    TM_NRF24L01_Init(15, 32);
+    TM_NRF24L01_Init(19, 32);
   
     
     /* Set 2MBps data rate and -18dBm output power */
@@ -177,63 +148,74 @@ void main(void) {
        
             
             
-           GICR |= (1<<INT1);
+           
             __sleep();
-            InitADC();
-            __delay_cycles(100);
-            GICR &=~ (1<<INT1);	
-            bat_level = StartADC(2);
-            if (bat_level<500) PORTB |= (1<<0);
-            else PORTB &=~ (1<<0);
-            /* Send it back, automatically goes to TX mode */
-            if (PINA&0x40)sprintf((char *)dataOut, "arm");
-            else sprintf((char *)dataOut, "drm");
-            TM_NRF24L01_Transmit(dataOut);
+            if(CheckSleepTimeout()) {
+              InitADC();
+              __delay_cycles(100);
+             
+              bat_level = StartADC(2);
+              if (bat_level<500);
+             
+              /* Send it back, automatically goes to TX mode */
+            //  PORTB |= (1<<0);
+              if (bat_level<500) sprintf((char *)dataOut, "iambat");
+              else sprintf((char *)dataOut, "iam");
+              TM_NRF24L01_Transmit(dataOut);
+              
+              
+              do {
+                  transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
+              } while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
+             // PORTB ~&= (1<<0);
+              /* Send done */
             
-            
-            do {
-                transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
-            } while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
-            /* Send done */
-          
-            
-            /* Go back to RX Mode */
-            TM_NRF24L01_PowerUpRx();  
-            
-            SetTimer(2);
-            while(GetTimer()>0){
-              if(TM_NRF24L01_DataReady()) {
-                TM_NRF24L01_GetData(dataIn);
-                sprintf((char *)dataOut, "OK");
-                if (!memcmp(&dataIn,&dataOut,2)) {
-                  conf_flag =1;
-                  Beep(500);
-                  SetTimer(2);
-                  while(GetTimer()>0);
-                  conf_flag =0;
-                  break;
+              
+              /* Go back to RX Mode */
+              TM_NRF24L01_PowerUpRx();  
+              
+              SetTimer(1);
+              while(GetTimer()>0);
+                if(TM_NRF24L01_DataReady()) {
+                  TM_NRF24L01_GetData(dataIn);
+                  sprintf((char *)dataOut, "wdl");
+                  if(!memcmp(&dataIn,&dataOut,3)){
+                   if (dataIn[3]==0) timeout_water = 10;
+                   else timeout_water = 10*(dataIn[3]&0x0F0)+ 1*(dataIn[4]&0x0F0);
+                   
+                   PORTB |= (1<<0);
+                   PORTD |= (1<<6);
+                   SetTimer(timeout_water);
+                   while(GetTimer()>0);
+                   PORTB &=~ (1<<0);
+                   PORTD &=~ (1<<6);
+                   
+                   
+                  }
+                  sprintf((char *)dataOut, "tst");
+                  if(!memcmp(&dataIn,&dataOut,3)){
+                   PORTB |= (1<<0);
+                  sprintf((char *)dataOut, "iam");
+                  TM_NRF24L01_Transmit(dataOut);
+                  do {
+                    transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
+                  } while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
+                  
+                   PORTB &=~ (1<<0);
+                  
+                   
+                   
+                  }
+  
                 }
-                
-                
-              }
-               
-            }
-            PORTB &=~ (1<<0);
-            OffADC();
+                 
             
-            
-            TM_NRF24L01_PowerDown();
-            while (1){
-              t=PIND&0x08;
-              if((t==0x08)) break;
-            }
-            
-            
-        
-    
-
-
-
-
- } 
+              OffADC();
+              //PORTB &=~ (1<<0);
+              
+              
+              TM_NRF24L01_PowerDown();
+              ResetSleepTimeout();
+     }
+  } 
 }

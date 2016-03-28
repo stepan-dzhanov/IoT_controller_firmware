@@ -24,7 +24,8 @@ static  int loc_tic =0;
 static int loc_sec =0;
 static char b_flg =0;
 static int b_set=0;
-
+static char ready = 0;
+static int timeout=0;
 void Beep(int b_time){
   
   b_set = b_time;
@@ -72,4 +73,41 @@ __interrupt void TIMER0_OVF(void) {
     
   }
 
-} 
+}
+
+#pragma vector = TIMER2_OVF_vect 
+__interrupt void TIMER2_OVF_vectINT(void)
+{
+   timeout++;
+   if (timeout>=TIME_SLEEP) {
+     timeout =0;
+     ready = 1;
+   }
+}
+
+
+
+void RTCInit(void)
+{
+     TCCR0 = 0X02;
+     MCUCR |= (1<<SM0)|(1<<SM1)|(1<<SE);
+    //Disable timer2 interrupts
+    //TIMSK  = 0;
+    //Enable asynchronous mode
+    ASSR  = (1<<AS2);
+    //set initial counter value
+    TCNT2=0;
+    //set prescaller 1024
+    TCCR2 |= (1<<CS22)|(1<<CS21)|(1<<CS20);
+    while (ASSR & ((1<<TCN2UB)|(1<<TCR2UB)));
+    //enable TOV2 interrupt
+    TIMSK  |= (1<<TOIE2)|(1<<TOIE0);
+}
+
+char CheckSleepTimeout()  {
+  return ready;
+}
+void ResetSleepTimeout()  {
+  ready = 0;
+  timeout = 0;
+}
