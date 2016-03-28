@@ -505,7 +505,7 @@
       <inputs>
         <tool>
           <name>ICCAVR</name>
-          <file> 21 10 29 14 18 15 23 31 25 19 32 26 30 20 16</file>
+          <file> 21 10 29 14 18 15 23 31 25 19 32 26 16</file>
         </tool>
         <tool>
           <name>BICOMP</name>
