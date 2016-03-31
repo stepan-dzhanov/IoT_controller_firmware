@@ -81,11 +81,21 @@ __interrupt void INT1_vectINT(void) {
 }
 
 
+#define CH 19
+#define PAYLOAD 32
 
+typedef enum {
+  SENSOR_LOW_POWER=1,
+  DEVICE_LOW_POWER,
+  DEVICE_FULL_POWER
+}ID_remote_t;
+
+#define RF_ADDR 1
 
 void main(void) {
   TM_NRF24L01_Transmit_Status_t transmissionStatus;
   char conf_flag = 0;
+  char tr_flg=0;
   unsigned int bat_level, power;
   volatile unsigned char t;
   
@@ -126,7 +136,7 @@ void main(void) {
     
   
   
-    TM_NRF24L01_Init(19, 32);
+    TM_NRF24L01_Init(CH, PAYLOAD);
   
     
     /* Set 2MBps data rate and -18dBm output power */
@@ -159,8 +169,12 @@ void main(void) {
              
               /* Send it back, automatically goes to TX mode */
             //  PORTB |= (1<<0);
-              if (bat_level<500) sprintf((char *)dataOut, "iambat");
+              
               else sprintf((char *)dataOut, "iam");
+              dataOut[3] = RF_ADDR;
+              dataOut[4] = DEVICE_LOW_POWER;
+              if (bat_level<500) sprintf(&dataOut[5], "bat");
+              
               TM_NRF24L01_Transmit(dataOut);
               
               
@@ -175,13 +189,19 @@ void main(void) {
               TM_NRF24L01_PowerUpRx();  
               
               SetTimer(1);
-              while(GetTimer()>0);
+              while(GetTimer()>0);                // To Do check status inside of delay
                 if(TM_NRF24L01_DataReady()) {
                   TM_NRF24L01_GetData(dataIn);
                   sprintf((char *)dataOut, "wdl");
-                  if(!memcmp(&dataIn,&dataOut,3)){
-                   if (dataIn[3]==0) timeout_water = 10;
-                   else timeout_water = 10*(dataIn[3]&0x0F0)+ 1*(dataIn[4]&0x0F0);
+                  if((!memcmp(&dataIn[1],&dataOut,3))&&((dataIn[0]&0x0F)==RF_ADDR)){
+                   if (dataIn[4]==0) timeout_water = 10;
+                   else timeout_water = 10*(dataIn[4]&0x0F)+ 1*(dataIn[5]&0x0F);
+                   
+                  sprintf((char *)dataOut, "OK");
+                  dataOut[2]= RF_ADDR;
+                  dataOut[3]=0;
+                  TM_NRF24L01_Transmit(dataOut);
+                  tr_flg=1;
                    
                    PORTB |= (1<<0);
                    PORTD |= (1<<6);
@@ -193,20 +213,25 @@ void main(void) {
                    
                   }
                   sprintf((char *)dataOut, "tst");
-                  if(!memcmp(&dataIn,&dataOut,3)){
-                   PORTB |= (1<<0);
-                  sprintf((char *)dataOut, "iam");
+                  if((!memcmp(&dataIn[1],&dataOut,3))&&((dataIn[0]&0x0F)==RF_ADDR)){
+                  PORTB |= (1<<0);
+                  sprintf((char *)dataOut, "OK");
+                  dataOut[2]= RF_ADDR;
+                  dataOut[3]=0;
                   TM_NRF24L01_Transmit(dataOut);
-                  do {
-                    transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
-                  } while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
-                  
-                   PORTB &=~ (1<<0);
+                  tr_flg=1;
+                  PORTB &=~ (1<<0);
                   
                    
                    
                   }
-  
+                  if(tr_flg==1){
+                    do {
+                    transmissionStatus = TM_NRF24L01_GetTransmissionStatus();
+                  } while (transmissionStatus == TM_NRF24L01_Transmit_Status_Sending);
+                  tr_flg=0;
+                  }
+                  
                 }
                  
             
