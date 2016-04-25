@@ -167,12 +167,12 @@ void main(void) {
               __delay_cycles(100);
              
               bat_level = StartADC(2);
-              if (bat_level<500);
+             // if (bat_level<500);
              
               /* Send it back, automatically goes to TX mode */
             //  PORTB |= (1<<0);
               
-              else sprintf((char *)dataOut, "iam");
+              sprintf((char *)dataOut, "iam");
               dataOut[3] = RF_ADDR;
               dataOut[4] = DEVICE_LOW_POWER;
               if (bat_level<500) sprintf(&dataOut[5], "bat");
