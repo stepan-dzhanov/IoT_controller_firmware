@@ -160,6 +160,8 @@ void main(void) {
             
            
             __sleep();
+          //  PORTB |= (1<<0);
+            //while(1);
             if(CheckSleepTimeout()) {
               InitADC();
               __delay_cycles(100);
@@ -184,6 +186,7 @@ void main(void) {
              // PORTB ~&= (1<<0);
               /* Send done */
             
+             
               
               /* Go back to RX Mode */
               TM_NRF24L01_PowerUpRx();  
@@ -193,6 +196,9 @@ void main(void) {
                 if(TM_NRF24L01_DataReady()) {
                   TM_NRF24L01_GetData(dataIn);
                   sprintf((char *)dataOut, "wdl");
+                  
+            
+                  
                   if((!memcmp(&dataIn[1],&dataOut,3))&&((dataIn[0]&0x0F)==RF_ADDR)){
                    if (dataIn[4]==0) timeout_water = 10;
                    else timeout_water = 10*(dataIn[4]&0x0F)+ 1*(dataIn[5]&0x0F);
@@ -213,7 +219,8 @@ void main(void) {
                    
                   }
                   sprintf((char *)dataOut, "tst");
-                  if((!memcmp(&dataIn[1],&dataOut,3))&&((dataIn[0]&0x0F)==RF_ADDR)){
+                  if((!memcmp(&dataIn[1],&dataOut,3))&&((dataIn[0]&0x0F)==RF_ADDR)){//&&((dataIn[0]&0x0F)==RF_ADDR)
+                        
                   PORTB |= (1<<0);
                   sprintf((char *)dataOut, "OK");
                   dataOut[2]= RF_ADDR;
