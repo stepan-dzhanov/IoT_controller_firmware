@@ -23,4 +23,5 @@ int GetTimer();
 
 void SetTimer(int tm);
 void Beep(int b_time);
+void StopBeep();
 #endif

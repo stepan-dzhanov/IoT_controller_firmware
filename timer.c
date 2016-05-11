@@ -16,7 +16,7 @@ extern char flag_null;
 extern char flag_control;
 extern char flag_ac;
 
-
+extern char ready;
 
 
 
@@ -24,13 +24,17 @@ static  int loc_tic =0;
 static int loc_sec =0;
 static char b_flg =0;
 static int b_set=0;
-static char ready = 0;
 static int timeout=0;
 void Beep(int b_time){
   
   b_set = b_time;
   b_flg =1;
   SET_BEP 
+}
+void StopBeep()  {
+   RESET_BEP
+   b_flg =0;
+  
 }
 
 
@@ -63,15 +67,15 @@ __interrupt void TIMER0_OVF(void) {
   if (loc_tic>=4408)  {
     loc_tic = 0;
     if(!(loc_sec==0))loc_sec--;
-  }
-  if (b_flg)  {
-    b_set--;
-    if(b_set == 0){
-      RESET_BEP
-      b_flg =0;
+    if (b_flg)  {
+      b_set--;
+      if(b_set == 0){
+        RESET_BEP
+        b_flg =0;
+      }
     }
-    
   }
+  
 
 }
 

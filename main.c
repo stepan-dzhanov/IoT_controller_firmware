@@ -11,8 +11,7 @@
 #include "m8_nrf24l01.h"
 
 
-static int timeout =0;
-static char ready =0;
+
 int position;
 unsigned char time_pulse =0;
 unsigned int  time_phase = 0;
@@ -25,6 +24,7 @@ char flag_control=0;
 char flag_ac=0;
 char int0_flag =0;
 char int1_flag =0;
+char ready = 0;
 
  char device_addr=0;
  char power=0;
@@ -78,6 +78,7 @@ __interrupt void INT1_vectINT(void) {
 __interrupt void INT1_vectINT(void) {
   if(int1_flag)  return;
   else int1_flag = 1;
+  ready = 1;
 }
 
 
@@ -90,18 +91,19 @@ typedef enum {
   DEVICE_FULL_POWER
 }ID_remote_t;
 
-#define RF_ADDR 1
+#define RF_ADDR 3
 
 void main(void) {
   TM_NRF24L01_Transmit_Status_t transmissionStatus;
   char conf_flag = 0;
   char tr_flg=0;
+  
   unsigned int bat_level, power;
   volatile unsigned char t;
   
   char tx_buff [64];
   
- char timeout_water =0;
+  int timeout_water =0;
 
   
   DDRA=0x03;
@@ -156,13 +158,12 @@ void main(void) {
      
             
        
-            
+           
             
            
-            __sleep();
-          //  PORTB |= (1<<0);
-            //while(1);
-            if(CheckSleepTimeout()) {
+             SetTimer(60);
+             while(GetTimer()>0);
+            if(1) {
               InitADC();
               __delay_cycles(100);
              
@@ -175,7 +176,13 @@ void main(void) {
               sprintf((char *)dataOut, "iam");
               dataOut[3] = RF_ADDR;
               dataOut[4] = DEVICE_LOW_POWER;
-              if (bat_level<500) sprintf(&dataOut[5], "bat");
+             // if (bat_level<500) sprintf(&dataOut[5], "bat");
+              sprintf(&dataOut[5], "nbt");
+            //  if (int1_flag){
+              //  sprintf(&dataOut[5],"dor");
+             //   int1_flag=0;
+               
+            //  }
               
               TM_NRF24L01_Transmit(dataOut);
               
@@ -195,39 +202,66 @@ void main(void) {
               while(GetTimer()>0);                // To Do check status inside of delay
                 if(TM_NRF24L01_DataReady()) {
                   TM_NRF24L01_GetData(dataIn);
-                  sprintf((char *)dataOut, "wdl");
-                  
-            
-                  
+                  sprintf((char *)dataOut, "wdl");  
                   if((!memcmp(&dataIn[1],&dataOut,3))&&((dataIn[0]&0x0F)==RF_ADDR)){
-                   if (dataIn[4]==0) timeout_water = 10;
-                   else timeout_water = 10*(dataIn[4]&0x0F)+ 1*(dataIn[5]&0x0F);
+                  
+                  
+                  timeout_water = 10*(dataIn[4]&0x0F)+ 1*(dataIn[5]&0x0F);
+                  if (timeout_water>90) timeout_water=90;
                    
                   sprintf((char *)dataOut, "OK");
                   dataOut[2]= RF_ADDR;
                   dataOut[3]=0;
                   TM_NRF24L01_Transmit(dataOut);
                   tr_flg=1;
-                   
-                   PORTB |= (1<<0);
-                   PORTD |= (1<<6);
-                   SetTimer(timeout_water);
-                   while(GetTimer()>0);
-                   PORTB &=~ (1<<0);
-                   PORTD &=~ (1<<6);
+                  
+                  
+                  Beep(timeout_water*60);
                    
                    
                   }
-                  sprintf((char *)dataOut, "tst");
-                  if((!memcmp(&dataIn[1],&dataOut,3))&&((dataIn[0]&0x0F)==RF_ADDR)){//&&((dataIn[0]&0x0F)==RF_ADDR)
-                        
-                  PORTB |= (1<<0);
+                  sprintf((char *)dataOut, "sld");  
+                  if((!memcmp(&dataIn[1],&dataOut,3))&&((dataIn[0]&0x0F)==RF_ADDR)){
                   sprintf((char *)dataOut, "OK");
                   dataOut[2]= RF_ADDR;
                   dataOut[3]=0;
                   TM_NRF24L01_Transmit(dataOut);
                   tr_flg=1;
+                   
+                  PORTB |= (1<<0);
+                   
+                   
+                  }
+                  sprintf((char *)dataOut, "rld");  
+                  if((!memcmp(&dataIn[1],&dataOut,3))&&((dataIn[0]&0x0F)==RF_ADDR)){
+                  sprintf((char *)dataOut, "OK");
+                  dataOut[2]= RF_ADDR;
+                  dataOut[3]=0;
+                  TM_NRF24L01_Transmit(dataOut);
+                  tr_flg=1;
+                   
                   PORTB &=~ (1<<0);
+                  StopBeep();
+                   
+                   
+                  }
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  sprintf((char *)dataOut, "tst");
+                  if((!memcmp(&dataIn[1],&dataOut,3))&&((dataIn[0]&0x0F)==RF_ADDR)){//&&((dataIn[0]&0x0F)==RF_ADDR)
+                        
+                 
+                  sprintf((char *)dataOut, "OK");
+                  dataOut[2]= RF_ADDR;
+                  dataOut[3]=0;
+                  TM_NRF24L01_Transmit(dataOut);
+                  tr_flg=1;
+                 
                   
                    
                    
@@ -248,6 +282,8 @@ void main(void) {
               
               TM_NRF24L01_PowerDown();
               ResetSleepTimeout();
+           
      }
+    
   } 
 }
