@@ -103,5 +103,5 @@ void RTCInit(void)
     TCCR2 |= (1<<CS22)|(1<<CS21)|(1<<CS20);
     while (ASSR & ((1<<TCN2UB)|(1<<TCR2UB)));
     //enable TOV2 interrupt
-    TIMSK  |= (1<<TOIE2)|(1<<TOIE0);
+    TIMSK  |= (1<<TOIE0);
 }

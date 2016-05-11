@@ -58,7 +58,7 @@ char i;
   SetTimer(2);
   while(GetTimer()>0);
   
-  sprintf(tx_buff, "GET /update?api_key=1CV2GX9SLOJGA16D&field4=");//28\r\n\r\n");
+  sprintf(tx_buff, "GET /update?api_key=81KB327U663IVBLM&field1=");//28\r\n\r\n");
   for(i=0;i<counter; i++){
     tx_buff[44+i] = tx_buff2[i];
   }
